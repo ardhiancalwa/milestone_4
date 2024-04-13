@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:get/get.dart';
+import 'package:milestone_4/app/routes/app_pages.dart';
 import 'package:milestone_4/app/theme/color.dart';
 
 import '../../../widget/card_movie.dart';
@@ -12,40 +14,139 @@ class SearchPageView extends GetView<SearchPageController> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Container(
-        width: 225,
-        height: double.infinity, // Adjusted height to fit the content
+        width: 275,
+        height: double.infinity, 
         decoration: BoxDecoration(
-          color: backgroundColor, // Added background color
+          color: backgroundColor, 
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(10),
             bottomRight: Radius.circular(10),
           ),
         ),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align children to the start
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Align children to the start
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                  'assets/images/your_image_asset.png'), // Provide image asset path
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Rookie Rebels',
-                style: TextStyle(
-                  color: white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: const EdgeInsets.all(35.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        'assets/images/logo/popcorn.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                      SizedBox(
+                        width: 9,
+                      ),
+                      Text(
+                        'Rookie Rebels',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 29,
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Image.asset(
+                            'assets/images/icons/navHome.png',
+                            color: primaryColor,
+                          ),
+                        ),
+                        Text(
+                          'Home',
+                          style: TextStyle(
+                            color: white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/images/icons/navWatchList.png',
+                          color: primaryColor,
+                        ),
+                      ),
+                      Text(
+                        'Watch List',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
+            Container(
+              height: 85,
+              width: 275,
+              color: Color(0xFF4F4F4F),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Username',
+                        style: TextStyle(
+                          color: white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        'email@gmail.com',
+                        style: TextStyle(
+                          color: Color(0xFF828282),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Get.toNamed(Routes.LOGIN);
+                    },
+                    icon: Image.asset(
+                      'assets/images/icons/logout.png',
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        iconTheme: IconThemeData(color: white),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -123,5 +224,28 @@ class SearchPageView extends GetView<SearchPageController> {
         ),
       ),
     );
+  }
+  Future<List<Movie>> _fetchMovies(String searchTerm) async {
+    // Initialize Hive and Dio (assuming they are already initialized in your app)
+    await initializeHive();
+    final dio = Dio();
+
+    try {
+      final response = await dio.get(
+        'https://api.themoviedb.org/3/search/movie',
+        queryParameters: {
+          'api_key': YOUR_TMDB_API_KEY, // Replace with your actual key
+          'language': 'en-US',
+          'query': searchTerm,
+        },
+      );
+
+      final results = response.data['results'] as List;
+      return results.map((movieData) => Movie.fromJson(movieData)).toList();
+    } on DioError catch (e) {
+      // Handle DioError (e.g., network errors, status code errors)
+      print(e);
+      return []; // Return empty list on error
+    }
   }
 }

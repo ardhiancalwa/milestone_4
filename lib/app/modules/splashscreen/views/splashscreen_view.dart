@@ -11,7 +11,7 @@ class SplashscreenView extends GetView<SplashscreenController> {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 2), (() {
-      Get.offAllNamed(Routes.NAVIGATION);
+      Get.offAllNamed(Routes.LOGIN);
     }));
     return Scaffold(
       backgroundColor: backgroundColor,

@@ -1,23 +1,23 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:milestone_4/app/modules/home/views/home_view.dart';
 
 class LoginController extends GetxController {
-  //TODO: Implement LoginController
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  void login(BuildContext context) {
+    final String email = emailController.text;
+    final String password = passwordController.text;
+
+    // Perform your login logic here, for simplicity using shared preferences
+    if (email == "test@example.com" && password == "password") {
+      // Save login status to shared preferences
+      // Redirect to main page
+      Get.offAll(HomeView());
+    } else {
+      // Show error message
+      Get.snackbar('Login Failed', 'Invalid email or password');
+    }
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

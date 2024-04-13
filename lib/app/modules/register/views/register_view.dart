@@ -242,12 +242,17 @@ class RegisterView extends GetView<RegisterController> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                Text(
-                  'Sign In',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                  },
+                  child: Text(
+                    'Sign In',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 )
               ],
